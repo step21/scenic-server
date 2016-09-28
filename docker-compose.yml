@@ -1,0 +1,56 @@
+openldap:
+  build: images/openldap
+#  image: openldap:latest
+  environment:
+    LDAP_DOMAIN: example.com
+    LDAP_PASSWORD: ChangeMe!
+    LDAP_ORGANIZATION: Example
+  restart: unless-stopped
+  volumes:
+    - ./volumes/openldap/config:/etc/ldap/slapd.d:rw
+    - ./volumes/openldap/data:/var/lib/ldap:rw
+
+phpldapadmin:
+  build: images/phpldapadmin
+#  image: phpldapadmin:latest
+  expose:
+    - 80/tcp
+  links:
+    - openldap:ldap
+  ports:
+    - 0.0.0.0:80:80/tcp
+  restart: unless-stopped
+  volumes:
+    - ./volumes/phpldapadmin/config:/opt/phpldapadmin/config:rw
+
+freeswitch:
+  build: images/freeswitch
+#  image: freeswitch:latest
+  expose:
+    - 5060/tcp
+    - 5060/udp
+  links:
+    - openldap:ldap
+  ports:
+    - 0.0.0.0:5060:5060/tcp
+    - 0.0.0.0:5060:5060/udp
+  restart: unless-stopped
+  volumes:
+    - ./volumes/freeswitch/config:/etc/freeswitch:rw
+    - ./volumes/freeswitch/data:/var/lib/freeswitch:rw
+
+coturn:
+  build: images/coturn
+#  image: coturn:latest
+  expose:
+    - 3478/tcp
+    - 3478/udp
+  links:
+    - openldap:ldap
+  ports:
+    - 0.0.0.0:3478:3478/tcp
+    - 0.0.0.0:3478:3478/udp
+  restart: unless-stopped
+  volumes:
+    - ./volumes/coturn/config:/etc/coturn:rw
+    - ./volumes/coturn/data:/var/lib/turn:rw
