@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. /etc/coturn/envvars
+
 if [ -n "${LDAP_BIND_DN}" -a -n "${LDAP_BIND_PASSWORD}" ]; then
   LDAP_BIND_OPTS="-D ${LDAP_BIND_DN} -w ${LDAP_BIND_PASSWORD}"
 else
