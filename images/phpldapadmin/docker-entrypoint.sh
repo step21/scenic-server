@@ -17,13 +17,24 @@ elif [ "${1}" = "${PROCNAME}" ]; then
   set -- "${DAEMON}" "$@"
 fi
 
+rm -f /run/apache2/apache2.pid
+
+for file in /etc/apache2/mods-enabled/*.conf; do
+  ln -sf `echo $file | sed 's|mods-enabled|mods-available|;'` $file;
+done
+
+if [ ! -f /etc/ssl/certs/ssl-cert-snakeoil.pem -o ! -f /etc/ssl/private/ssl-cert-snakeoil.key ]; then
+  dpkg-reconfigure ssl-cert
+fi
+
+a2enmod ssl
+a2ensite default-ssl
+
 [ ! -d /opt/phpldapadmin/config ] && mkdir -p /opt/phpldapadmin/config
 
 if [ ! -f /opt/phpldapadmin/config/config.php ]; then
   cp -Rp /opt/phpldapadmin/config.default/* /opt/phpldapadmin/config/
 fi
-
-rm -f /run/apache2/apache2.pid
 
 chown -R root:root /opt/phpldapadmin
 chmod -R u=rwX,g=rX,o=rX /opt/phpldapadmin

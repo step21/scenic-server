@@ -5,11 +5,12 @@ ENV PHPLDAPADMIN_VERSION 1.2.3
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -qy && \
-    apt-get install -qy apache2 bsdtar ca-certificates curl libapache2-mod-php5 patch php5-curl php5-ldap && \
+    apt-get install -qy apache2 bsdtar ca-certificates curl libapache2-mod-php5 patch php5-curl php5-ldap ssl-cert && \
     apt-get autoremove -qy --purge && \
     apt-get clean -qy && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    rm -rf /var/www/html/*
+    rm -rf /var/www/html/* && \
+    rm -f /etc/ssl/certs/ssl-cert-snakeoil.pem /etc/ssl/private/ssl-cert-snakeoil.key
 
 RUN find /etc/apache2 -name *.conf -exec sed -i 's|CustomLog .*access.log|CustomLog /proc/self/fd/1|;s|ErrorLog .*error.log|ErrorLog /proc/self/fd/2|;' '{}' \;
 
