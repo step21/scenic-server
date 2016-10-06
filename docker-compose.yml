@@ -1,23 +1,58 @@
 openldap:
   build: images/openldap
   environment:
-    LDAP_DOMAIN: example.com
-    LDAP_PASSWORD: ChangeMe!
-    LDAP_ORGANIZATION: Example
+    LDAP_DOMAIN: scenic.sat.qc.ca
+    LDAP_PASSWORD: Eegh5VeeNoon5wee
+    LDAP_ORGANIZATION: SAT
+    LDAP_LOG_LEVEL: -1
   restart: unless-stopped
   volumes:
     - ./volumes/openldap/certs:/etc/ldap/certs:rw
     - ./volumes/openldap/config:/etc/ldap/slapd.d:rw
     - ./volumes/openldap/data:/var/lib/ldap:rw
 
+nginx:
+  build: images/nginx
+  ports:
+    - 0.0.0.0:80:80/tcp
+    - 0.0.0.0:443:443/tcp
+  restart: unless-stopped
+  volumes:
+    - ./volumes/nginx/config:/etc/nginx:rw
+    - ./volumes/nginx/html:/usr/share/nginx/html:rw
+
+docker-gen:
+  build: images/docker-gen
+  command: -notify-sighup nginx -watch -only-exposed /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
+  links:
+    - nginx
+  restart: unless-stopped
+  volumes:
+    - ./volumes/docker-gen/config:/etc/docker-gen:rw
+    - ./volumes/nginx/config:/etc/nginx:rw
+    - /var/run/docker.sock:/tmp/docker.sock:ro
+
+#letsencrypt:
+#  image: jrcs/letsencrypt-nginx-proxy-companion:latest
+#  environment:
+#    NGINX_DOCKER_GEN_CONTAINER: proxy_nginx_1
+#  restart: always
+#  volumes:
+#    - /var/run/docker.sock:/var/run/docker.sock:ro
+#  volumes_from:
+#    - nginx_data
+
 phpldapadmin:
   build: images/phpldapadmin
+  environment:
+    VIRTUAL_HOST: sip.scenic.sat.qc.ca
+    VIRTUAL_PROTO: https
+    VIRTUAL_PORT: 443
+    FORCE_HTTPS: 'true'
   expose:
     - 80/tcp
   links:
     - openldap:ldap
-  ports:
-    - 0.0.0.0:80:80/tcp
   restart: unless-stopped
   volumes:
     - ./volumes/phpldapadmin/config:/opt/phpldapadmin/config:rw
