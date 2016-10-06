@@ -17,7 +17,7 @@ fi
 if [ -n "${LDAP_URL}" ]; then
   LDAP_URL_OPTS="-H ${LDAP_URL}"
 else
-  LDAP_URL_OPTS='-H ldap://ldap'
+  LDAP_URL_OPTS='-H ldaps://ldap'
 fi
 
 if [ -n "${SIP_DOMAIN}" ]; then

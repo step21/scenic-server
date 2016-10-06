@@ -4,14 +4,15 @@ MAINTAINER Michael Richard <michael.richard@oriaks.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update -qy && \
-    apt-get install -qy coturn curl gosu ldap-utils && \
+    apt-get install -qy ca-certificates coturn curl gosu ldap-utils && \
     apt-get autoremove -qy --purge && \
     apt-get clean -qy && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN mkdir -p /etc/coturn.default && \
     ln -fs /etc/coturn/turnserver.conf /etc/turnserver.conf
-COPY turnserver.conf /etc/coturn.default/
+COPY ldap.conf /etc/ldap/ldap.conf
+COPY turnserver.conf /etc/coturn.default/turnserver.conf
 
 COPY ldap2turn.sh /
 RUN chmod +x /ldap2turn.sh

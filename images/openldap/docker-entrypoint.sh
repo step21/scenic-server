@@ -20,6 +20,20 @@ elif [ "${1}" = "${PROCNAME}" ]; then
   set -- "${DAEMON}" "$@"
 fi
 
+if [ ! -f /etc/ldap/certs/default.pem -o ! -f /etc/ldap/certs/default.key ]; then
+  mkdir -p /etc/ldap/certs
+  if [ ! -f /etc/ssl/certs/ssl-cert-snakeoil.pem -o ! -f /etc/ssl/private/ssl-cert-snakeoil.key ]; then
+    dpkg-reconfigure ssl-cert
+  fi
+  cp -p /etc/ssl/certs/ssl-cert-snakeoil.pem /etc/ldap/certs/default.pem
+  cp -p /etc/ssl/private/ssl-cert-snakeoil.key /etc/ldap/certs/default.key
+fi
+
+if [ ! -f /etc/ldap/certs/dhparam.pem ]; then
+  mkdir -p /etc/ldap/certs
+  openssl dhparam -out /etc/ldap/certs/dhparam.pem 2048
+fi
+
 [ ! -d /etc/ldap/slapd.d ] && mkdir -p /etc/ldap/slapd.d
 [ ! -d /var/lib/ldap     ] && mkdir -p /var/lib/ldap
 

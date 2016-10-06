@@ -12,6 +12,16 @@ olcLogLevel: none
 # The tool-threads parameter sets the actual amount of cpu's that is used
 # for indexing.
 olcToolThreads: 1
+# LDAP version
+olcRequires: LDAPv3
+# TLS
+#olcTLSCipherSuite: SECURE256:+SECURE128:-VERS-TLS-ALL:+VERS-TLS1.2:-RSA:-DHE-DSS:-CAMELLIA-128-CBC:-CAMELLIA-256-CBC
+olcTLSCertificateFile: /etc/ldap/certs/default.pem
+olcTLSCertificateKeyFile: /etc/ldap/certs/default.key
+#olcTLSDHParamFile: /etc/ldap/certs/dhparam.pem
+olcTLSVerifyClient: never
+olcLocalSSF: 128
+olcSecurity: simple_bind=128 ssf=128 tls=0 update_ssf=128
 
 # Frontend settings
 dn: olcDatabase={-1}frontend,cn=config

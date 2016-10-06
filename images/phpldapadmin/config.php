@@ -332,7 +332,7 @@ $servers->setValue('server','name','My LDAP Server');
    $servers->setValue('login','bind_pass',getenv(LDAP_BIND_PASSWORD));
 
 /* Use TLS (Transport Layer Security) to connect to the LDAP server. */
-// $servers->setValue('server','tls',false);
+   $servers->setValue('server','tls',true);
 
 /************************************
  *      SASL Authentication         *

@@ -6,6 +6,7 @@ openldap:
     LDAP_ORGANIZATION: Example
   restart: unless-stopped
   volumes:
+    - ./volumes/openldap/certs:/etc/ldap/certs:rw
     - ./volumes/openldap/config:/etc/ldap/slapd.d:rw
     - ./volumes/openldap/data:/var/lib/ldap:rw
 

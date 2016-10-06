@@ -3,11 +3,14 @@ MAINTAINER Michael Richard <michael.richard@oriaks.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -qy && \
-    apt-get install -qy ldap-utils ldapvi schema2ldif slapd slapd-smbk5pwd vim-tiny && \
+    apt-get install -qy ca-certificates ldap-utils ldapvi schema2ldif slapd slapd-smbk5pwd ssl-cert vim-tiny && \
     apt-get autoremove -qy --purge && \
     apt-get clean -qy && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    rm -rf /etc/ldap/slapd.d /var/lib/ldap
+    rm -rf /etc/ldap/slapd.d /var/lib/ldap && \
+    rm -f /etc/ssl/certs/ssl-cert-snakeoil.pem /etc/ssl/private/ssl-cert-snakeoil.key
+
+RUN usermod -aG ssl-cert openldap
 
 COPY ldap.conf /etc/ldap/ldap.conf
 COPY ldaprc /root/.ldaprc
@@ -19,7 +22,7 @@ COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 389/tcp 636/tcp
-VOLUME [ "/etc/ldap/slapd.d", "/var/lib/ldap" ]
+VOLUME [ "/etc/ldap/slapd.d", "/etc/ldap/certs", "/var/lib/ldap" ]
 
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 #CMD [ "slapd" ]

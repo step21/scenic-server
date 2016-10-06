@@ -12,13 +12,14 @@ RUN curl -s https://files.freeswitch.org/repo/deb/debian/freeswitch_archive_g0.p
     echo 'deb http://files.freeswitch.org/repo/deb/freeswitch-1.6/ jessie main' > /etc/apt/sources.list.d/freeswitch.list
 
 RUN apt-get update -qy && \
-    apt-get install -qy freeswitch freeswitch-mod-console freeswitch-mod-dialplan-xml freeswitch-mod-dptools freeswitch-mod-logfile freeswitch-mod-sofia freeswitch-mod-xml-ldap && \
+    apt-get install -qy ca-certificates freeswitch freeswitch-mod-console freeswitch-mod-dialplan-xml freeswitch-mod-dptools freeswitch-mod-logfile freeswitch-mod-sofia freeswitch-mod-xml-ldap && \
     apt-get autoremove -qy --purge && \
     apt-get clean -qy && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN mkdir -p /etc/freeswitch.default
 COPY freeswitch.xml /etc/freeswitch.default/freeswitch.xml
+COPY ldap.conf /etc/ldap/ldap.conf
 COPY vars.xml /etc/freeswitch.default/vars.xml
 
 COPY docker-entrypoint.sh /
