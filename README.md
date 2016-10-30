@@ -32,7 +32,7 @@ phpldapadmin:
   environment:
     VIRTUAL_HOST: pla.example.com            # Virtual host name that will handle requests to phpLDAPadmin
 
-freeswitch:
+kamailio:
   environment:
     SIP_DOMAIN: example.com                  # SIP domain for registering users
 ```

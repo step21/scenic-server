@@ -44,8 +44,8 @@ phpldapadmin:
     - openldap:ldap
   restart: unless-stopped
 
-freeswitch:
-  image: oriaks/freeswitch:latest
+kamailio:
+  image: oriaks/kamailio:latest
   environment:
     SIP_DOMAIN: localhost
   expose:
@@ -58,7 +58,7 @@ freeswitch:
     - 0.0.0.0:5060:5060/udp
   restart: unless-stopped
   volumes:
-    - ./volumes/freeswitch/data:/var/lib/freeswitch:rw
+    - ./volumes/kamailio/data:/var/lib/kamailio:rw
 
 coturn:
   image: oriaks/coturn:latest
