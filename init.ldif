@@ -1,0 +1,34 @@
+# extended LDIF
+#
+# LDAPv3
+#
+
+# Groups, localhost
+dn: ou=Groups,dc=localhost
+objectClass: organizationalUnit
+objectClass: top
+ou: Groups
+
+# Users, localhost
+dn: ou=Users,dc=localhost
+objectClass: top
+objectClass: organizationalUnit
+ou: Users
+
+# Administrators, Groups, localhost
+dn: cn=Administrators,ou=Groups,dc=localhost
+objectClass: top
+objectClass: groupOfNames
+cn: Administrators
+member: uid=admin,ou=Users,dc=localhost
+
+# admin, Users, localhost
+dn: uid=admin,ou=Users,dc=localhost
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: SIPIdentity
+cn: Administrator
+SIPIdentityPassword: admin
+sn: Administrator
+uid: admin
+userPassword: {SSHA}MabubqapUEX13igjlnxQEHKl4JcJ3P2A

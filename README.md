@@ -96,7 +96,7 @@ Two helper scripts are included:
 
 ### Initialize database
 
-If you want to initialize the LDAP database with the recommended structure, run:
+If you want to initialize the LDAP database with the recommended structure, adapt the *init.ldif* file, then run:
 
 ```shell
 restore_ldif.sh init.ldif
